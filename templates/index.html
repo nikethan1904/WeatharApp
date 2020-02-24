@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+WELCOME TO HARI's WEATHER FORECAST
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+</head>
+<body>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<h1>revanth weather forecasrt</h1>
+<button id="button" onclick="historical()">HISTORICAL</button>
+<p id="reva"></p>
+<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+
+<script>
+   document.getElementById('button').addEventListener('click',forecast);
+    function historical(){
+        var h=new XMLHttpRequest({mozSystem: true});
+        h.open('GET','http://ec2-18-191-0-233.us-east-2.compute.amazonaws.com/forecast',true);
+        h.onload=function(){
+            if(this.status == 200){
+               var u=JSON.parse(this.responseText);
+
+                var output='';
+                for(var i in u){
+                   output +='DATE :'+u[i].DATE  ;
+
+
+                 }
+
+
+            }
+       }
+      h.send();
+
+    }
+</script>
+<input type="text" id="myDate" value=""><button id="btn2" onclick="myDate()">submit</button>
+<p id="r2"></p>
+<p id="r3"></p>
+ <script>
+  document.getElementById('btn2').addEventListener('click',myDate);
+  function myDate() {
+    var x = document.getElementById("myDate").value;
+
+        var h=new XMLHttpRequest({mozSystem: true});
+        h.open('GET','http://127.0.0.1:8000/weather/historical/',true);
+        h.onload=function(){
+            if(this.status == 200){
+               var u=JSON.parse(this.responseText);
+
+                var output1='';
+                var output2='';
+                for(var i in u){
+                    if(x === u[i].DATE){
+                        output1 +='TMIN :'+u[i].TMIN  ;
+                        output2 +='TMAX:'+u[i].TMAX;
+
+
+                      }
+
+
+                }
+                document.getElementById('r2').innerHTML=output1;
+                document.getElementById('r3').innerHTML=output2;
+              }
+
+            }
+
+
+    h.send();
+
+    }
+
+
+</script>
+
+<p id="r4"></p>
+<p id="r5"></p>
+<p id="r6"></p>
+<canvas id="linechart" width="400" height="400"></canvas>
+<input type="text" id="Date" value=""><button id="btn3" onclick="plot()">submit</button>
+ <script type="text/javascript">
+  document.getElementById('btn3').addEventListener('click',plot);
+  function plot() {
+    var x = document.getElementById("Date").value;
+    var ur='http://127.0.0.1:8000/weather/forecast/';
+    var url=ur+x;
+
+        var h=new XMLHttpRequest({mozSystem: true});
+        h.open('GET',url,true);
+        var date=[];
+        var tmax=[];
+        var tmin=[];
+        h.onload=function(){
+
+
+            if(this.status == 200){
+                var u=JSON.parse(this.responseText);
+
+                var output='';
+                for(var i in u){
+                   tmax [i]='TMAX:'+u[i].TMAX  ;
+                   tmin [i]='TMIN:'+u[i].TMIN;
+
+
+
+
+                 }
+
+             document.getElementById('r4').innerHTML=tmax;
+             document.getElementById('r5').innerHTML=tmin;
+            window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+	            theme: "light2",
+	        title:{
+		            text: "Simple Line Chart"
+	                },
+	        axisY:{
+		            includeZero: false
+	               },
+	        data: [{
+		        type: "line",
+		        dataPoints: [
+			            { date[1]: tmin[1] },
+			            { date[2]: tmin[2]},
+			            { date[3]: tmin[3] },
+			            { date[4]: tmin[4] },
+			            { date[5]: tmin[5]},
+			            { date[6]: tmin[6] },
+
+		            ]
+					type: "line",
+		        dataPoints: [
+			            { date[1]: tmax[1] },
+			            { date[2]: tmax[2]},
+			            { date[3]: tmax[3] },
+			            { date[4]: tmax[4] },
+			            { date[5]: tmax[5]},
+			            { date[6]: tmax[6] },
+
+		            ]
+	        }]
+         });
+            chart.render();
+
+        }
+    }
+    h.send();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </script>
+
+
+
+
+
+
+
+
+</body>
+</html>
+

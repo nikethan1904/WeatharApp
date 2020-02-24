@@ -1,5 +1,4 @@
-# cloud_HW_3
-UI for the homework assignment 2
+
 
 The front end has been developed using AJAX ,canvas for charts
 
